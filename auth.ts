@@ -14,7 +14,7 @@ export const authConfig = {
     },
 
     authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth;
+      const isLoggedIn = !!auth?.user;
       const routes = ["/todos"];
       const isProtectedRoute = routes.some((route) => nextUrl.pathname.startsWith(route));
 
