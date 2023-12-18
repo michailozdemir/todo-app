@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthConfig, Session, User } from "next-auth";
+import NextAuth, { NextAuthConfig } from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -8,8 +8,9 @@ export const authConfig = {
   adapter: PrismaAdapter(prisma),
   providers: [GitHub, Google({ clientId: process.env.AUTH_GOOGLE_ID, clientSecret: process.env.AUTH_GOOGLE_SECRET })],
   callbacks: {
-    async session({ session, user }: { session: Session; user: User }) {
-      session.user.id = user.id;
+    async session({ session, token }) {
+      session.user.id = token.sub as string;
+
       return session;
     },
 
@@ -28,6 +29,9 @@ export const authConfig = {
   },
   pages: {
     signIn: "/signin",
+  },
+  session: {
+    strategy: "jwt",
   },
 } satisfies NextAuthConfig;
 
