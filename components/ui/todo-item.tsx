@@ -30,6 +30,7 @@ const TodoItem = ({ todo }: { todo: Todos }) => {
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => !todoCompleted && setIsSwiped(true),
     onSwipedRight: () => !todoCompleted && setIsSwiped(false),
+    preventScrollOnSwipe: true,
   });
 
   useEffect(() => {
