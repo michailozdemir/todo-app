@@ -12,7 +12,9 @@ import { Loader2 } from "lucide-react";
 import { useTodos } from "../todos-provider";
 
 const formSchema = z.object({
-  title: z.string(),
+  title: z.string().min(1, {
+    message: "Title is required",
+  }),
   description: z.string().optional(),
   completed: z.boolean(),
 });
@@ -43,7 +45,7 @@ const AddTodoForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 flex-1 sm:flex-row sm:items-center sm:px-5"
+        className="flex flex-col gap-4 flex-1 sm:flex-row sm:items-end sm:px-5"
       >
         <div className="grid gap-3 flex-1">
           <FormField
@@ -52,12 +54,14 @@ const AddTodoForm = () => {
             render={({ field }) => (
               <FormItem className="flex-1">
                 <FormControl>
-                  <Input
+                  <Textarea
                     {...field}
                     placeholder="Write down the title"
-                    className="p-0 rounded-none bg-transparent text-lg sm:h-auto placeholder:opacity-80 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="min-h-[unset] h-[28px] p-0 rounded-none bg-transparent text-lg resize-none placeholder:opacity-80 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
                     value={field.value}
                     autoComplete="off"
+                    maxLength={512}
+                    rows={1}
                   />
                 </FormControl>
                 <FormMessage />
@@ -73,9 +77,10 @@ const AddTodoForm = () => {
                   <Textarea
                     {...field}
                     placeholder="Add a short description (optional)"
-                    className="p-0 rounded-none min-h-[64px] max-h-16 bg-transparent text-sm text-zinc-500 resize-none sm:h-auto placeholder:opacity-80 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="min-h-[unset] h-[20px] p-0 rounded-none bg-transparent text-sm text-zinc-500 resize-none placeholder:opacity-80 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
                     value={field.value}
-                    
+                    maxLength={512}
+                    rows={1}
                   />
                 </FormControl>
                 <FormMessage />

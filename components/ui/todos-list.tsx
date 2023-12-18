@@ -23,11 +23,11 @@ const TodosList = () => {
     );
 
   return (
-    <ul className="grid place-items-center gap-2 max-w-3xl mx-auto w-full">
+    <div className="grid place-items-center gap-2 max-w-3xl mx-auto w-full">
       {todos?.map((todo: Todos) => (
         <TodoItem key={todo.id} todo={todo} />
       ))}
-    </ul>
+    </div>
   );
 };
 

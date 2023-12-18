@@ -1,24 +1,42 @@
-import * as React from "react"
+"use client";
 
-import { cn } from "@/lib/utils"
+import * as React from "react";
 
-export interface TextareaProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+import { cn } from "@/lib/utils";
 
-const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, ...props }, ref) => {
-    return (
-      <textarea
-        className={cn(
-          "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          className
-        )}
-        ref={ref}
-        {...props}
-      />
-    )
-  }
-)
-Textarea.displayName = "Textarea"
+export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
 
-export { Textarea }
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({ className, ...props }, ref) => {
+  const texteAreaRef = React.useRef<HTMLTextAreaElement>(null);
+  React.useImperativeHandle(ref, () => texteAreaRef.current!);
+
+  React.useEffect(() => {
+    const ref = texteAreaRef?.current;
+
+    const updateTextareaHeight = () => {
+      if (ref) {
+        ref.style.height = "auto";
+        ref.style.height = ref?.scrollHeight + "px";
+      }
+    };
+
+    updateTextareaHeight();
+    ref?.addEventListener("input", updateTextareaHeight);
+
+    return () => ref?.removeEventListener("input", updateTextareaHeight);
+  }, []);
+
+  return (
+    <textarea
+      className={cn(
+        "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        className
+      )}
+      ref={texteAreaRef}
+      {...props}
+    />
+  );
+});
+Textarea.displayName = "Textarea";
+
+export { Textarea };
