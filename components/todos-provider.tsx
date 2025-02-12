@@ -1,11 +1,10 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Todo } from "@/app/types";
-import { Todos } from "@prisma/client";
+import { Todo } from "@prisma/client";
 
 const useTodosController = () => {
-  const [todos, setTodos] = useState<Todos[]>();
+  const [todos, setTodos] = useState<Todo[]>();
 
   const fetchTodos = async () => {
     const res = await fetch("/api/todos");

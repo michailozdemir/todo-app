@@ -8,7 +8,7 @@ import { Form, FormField, FormItem, FormControl, FormMessage } from "./form";
 import clsx from "clsx";
 import { Checkbox } from "./checkbox";
 import TodoDeleteButton from "./todo-delete-button";
-import { Todos } from "@prisma/client";
+import { Todo } from "@prisma/client";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { Textarea } from "./textarea";
 import { useSwipeable } from "react-swipeable";
@@ -21,7 +21,7 @@ const formSchema = z.object({
   completed: z.boolean(),
 });
 
-const TodoItem = ({ todo }: { todo: Todos }) => {
+const TodoItem = ({ todo }: { todo: Todo }) => {
   const { id, title, description, completed } = todo;
   const [isSwiped, setIsSwiped] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
@@ -49,7 +49,7 @@ const TodoItem = ({ todo }: { todo: Todos }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: title,
-      description: description,
+      description: description || undefined,
       completed: completed,
     },
   });

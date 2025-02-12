@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = session.user.id;
-    await prisma.todos.create({
+    await prisma.todo.create({
       data: {
         title,
         description,
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
 
     const userId = session.user.id;
 
-    const todos = await prisma.todos.findMany({
+    const todos = await prisma.todo.findMany({
       where: {
         userId,
       },

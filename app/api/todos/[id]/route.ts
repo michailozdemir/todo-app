@@ -12,7 +12,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ message: "Not authorized" }, { status: 401 });
     }
 
-    await prisma.todos.update({
+    await prisma.todo.update({
       where: {
         id,
       },
@@ -38,7 +38,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ message: "Not authorized" }, { status: 401 });
     }
 
-    await prisma.todos.delete({
+    await prisma.todo.delete({
       where: {
         id,
       },
