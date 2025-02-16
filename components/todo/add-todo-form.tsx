@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Form, FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "./textarea";
+import { Textarea } from "../ui/textarea";
 import { Loader2 } from "lucide-react";
 import { useCreateTodo } from "@/lib/react-query/useTodos";
 
@@ -18,7 +18,7 @@ const formSchema = z.object({
   completed: z.boolean(),
 });
 
-const AddTodoForm = () => {
+const AddTodoForm: React.FC = () => {
   const { mutateAsync: createTodo } = useCreateTodo();
   const [isSubmitted, setIsSubmitted] = useState(false);
 

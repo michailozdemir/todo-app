@@ -4,15 +4,16 @@ import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { set, useForm } from "react-hook-form";
 import * as z from "zod";
-import { Form, FormField, FormItem, FormControl, FormMessage } from "./form";
+import { Form, FormField, FormItem, FormControl, FormMessage } from "../ui/form";
 import clsx from "clsx";
-import { Checkbox } from "./checkbox";
+import { Checkbox } from "../ui/checkbox";
 import TodoDeleteButton from "./todo-delete-button";
 import { Todo } from "@prisma/client";
 import { CheckedState } from "@radix-ui/react-checkbox";
-import { Textarea } from "./textarea";
+import { Textarea } from "../ui/textarea";
 import { useSwipeable } from "react-swipeable";
 import { useUpdateTodo } from "@/lib/react-query/useTodos";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -25,26 +26,14 @@ const formSchema = z.object({
 const TodoItem = ({ todo }: { todo: Todo }) => {
   const { id, title, description, completed } = todo;
   const [isSwiped, setIsSwiped] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
   const [todoCompleted, setTodoCompleted] = useState(completed);
   const { mutateAsync: updateTodo } = useUpdateTodo();
+  const isMobile = useIsMobile();
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => !todoCompleted && setIsSwiped(true),
     onSwipedRight: () => !todoCompleted && setIsSwiped(false),
     preventScrollOnSwipe: true,
   });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 767);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -71,7 +60,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
     <div className="relative w-full overflow-hidden rounded-xl">
       <div
         className={clsx(
-          "relative py-5 px-5 flex items-center gap-4 ease-in-out duration-300 bg-[#F4F4F4] rounded-xl z-10 dark:bg-[#2A2A2A]",
+          "relative py-5 px-5 flex items-center gap-4 ease-in-out duration-300 rounded-xl z-10 bg-white dark:bg-neutral-900 ",
           todoCompleted && "bg-[#F8F8F8] dark:bg-[#232323]",
           isSwiped && isMobile && "translate-x-[-62px]"
         )}
@@ -131,7 +120,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
                       <FormControl>
                         <Textarea
                           {...field}
-                          className="min-h-[unset] h-[24px] resize-none text-sm text-zinc-500 font-medium p-0 bg-transparent border-0 rounded-none placeholder:opacity-50 focus-visible:ring-0 focus-visible:ring-offset-0"
+                          className="min-h-[unset] h-[24px] resize-none text-sm text-zinc-500 font-regular p-0 bg-transparent border-0 rounded-none placeholder:opacity-50 focus-visible:ring-0 focus-visible:ring-offset-0"
                           value={field.value}
                           onBlur={form.handleSubmit(handleUpdateTodo)}
                           placeholder="You can still add a description here"
@@ -157,7 +146,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
         )}
       </div>
       {!todoCompleted && isMobile && (
-        <div className="absolute top-0 right-0 h-full w-full flex items-center justify-end px-3 rounded-xl bg-red-900">
+        <div className="absolute top-0 right-0 h-full w-full flex items-center justify-end px-3 rounded-xl bg-red-400/20">
           <TodoDeleteButton id={id} />
         </div>
       )}

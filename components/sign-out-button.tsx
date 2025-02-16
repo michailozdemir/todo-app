@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button } from "./button";
+import { Button } from "./ui/button";
 import { signOut } from "next-auth/react";
-import { Loader2 } from "lucide-react";
+import { Loader2, LogIn, LogOut } from "lucide-react";
 
 const SignOutBtn = () => {
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -19,8 +19,8 @@ const SignOutBtn = () => {
   };
 
   return (
-    <Button variant="default" onClick={handleSignOut} disabled={isSigningOut}>
-      {isSigningOut ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign Out"}
+    <Button variant="default" size="icon" onClick={handleSignOut} disabled={isSigningOut}>
+      {isSigningOut ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogOut className="w-4 h-4" />}
     </Button>
   );
 };
