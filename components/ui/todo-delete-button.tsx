@@ -12,14 +12,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
-import { useTodos } from "../todos-provider";
+import { useDeleteTodo } from "@/lib/react-query/useTodos";
 
 type TodoDeleteButtonProps = {
   id: string;
 };
 
 const TodoDeleteButton = ({ id }: TodoDeleteButtonProps) => {
-  const { deleteTodo } = useTodos();
+  const { mutateAsync: deleteTodo } = useDeleteTodo();
 
   return (
     <AlertDialog>
@@ -35,7 +35,7 @@ const TodoDeleteButton = ({ id }: TodoDeleteButtonProps) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => deleteTodo(id)}>Delete</AlertDialogAction>
+          <AlertDialogAction onClick={async () => await deleteTodo(id)}>Delete</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

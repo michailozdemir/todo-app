@@ -10,22 +10,23 @@ const Header = async () => {
   const session = await auth();
 
   return (
-    <header className="py-5 border-0 border-b border-dark-900">
-      <div className="mx-auto max-w-7xl px-4 flex items-center gap-2 justify-between">
-        <Link href="/" className="text-2xl font-bold">
+    <div className="h-16 mt-8">
+      <header className="fixed top-8 left-[16px] right-[16px] w-[calc(100%-32px)] py-3 px-6 border border-foreground/10 max-w-7xl mx-auto flex items-center justify-between rounded-xl bg-white dark:bg-neutral-900 backdrop-blur-sm">
+        <Link href="/" className="text-2xl font-extrabold">
           Todo.easy
         </Link>
         <div className="flex items-center gap-2">
-          {(session && <SignOutBtn />) || (
+          {session ? (
+            <SignOutBtn />
+          ) : (
             <Link href="/signin">
               <Button variant="default">Sign In</Button>
             </Link>
           )}
-
           <ModeToggle />
         </div>
-      </div>
-    </header>
+      </header>
+    </div>
   );
 };
 

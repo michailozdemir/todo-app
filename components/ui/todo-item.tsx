@@ -12,12 +12,13 @@ import { Todo } from "@prisma/client";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { Textarea } from "./textarea";
 import { useSwipeable } from "react-swipeable";
+import { useUpdateTodo } from "@/lib/react-query/useTodos";
 
 const formSchema = z.object({
   title: z.string().min(1, {
     message: "Title is required",
   }),
-  description: z.string(),
+  description: z.string().optional().default(""),
   completed: z.boolean(),
 });
 
@@ -26,7 +27,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
   const [isSwiped, setIsSwiped] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
   const [todoCompleted, setTodoCompleted] = useState(completed);
-
+  const { mutateAsync: updateTodo } = useUpdateTodo();
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => !todoCompleted && setIsSwiped(true),
     onSwipedRight: () => !todoCompleted && setIsSwiped(false),
@@ -49,21 +50,21 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: title,
-      description: description || undefined,
+      description: description || "",
       completed: completed,
     },
   });
 
-  const updateTodo = (data: z.infer<typeof formSchema>) => {
-    fetch(`/api/todos/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+  const handleUpdateTodo = async (data: z.infer<typeof formSchema>) => {
+    const hasChanges = data.title !== title || data.description !== description || data.completed !== completed;
 
-    setTodoCompleted(data.completed);
+    if (hasChanges) {
+      await updateTodo({
+        id,
+        data,
+      });
+      setTodoCompleted(data.completed);
+    }
   };
 
   return (
@@ -89,7 +90,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
                         checked={field.value}
                         onCheckedChange={(checked: CheckedState) => {
                           field.onChange(checked);
-                          form.handleSubmit(updateTodo)();
+                          form.handleSubmit(handleUpdateTodo)();
                         }}
                       />
                     </FormControl>
@@ -111,7 +112,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
                           )}
                           onChange={field.onChange}
                           value={field.value}
-                          onBlur={form.handleSubmit(updateTodo)}
+                          onBlur={form.handleSubmit(handleUpdateTodo)}
                           autoComplete="off"
                           disabled={todoCompleted}
                           maxLength={512}
@@ -132,7 +133,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
                           {...field}
                           className="min-h-[unset] h-[24px] resize-none text-sm text-zinc-500 font-medium p-0 bg-transparent border-0 rounded-none placeholder:opacity-50 focus-visible:ring-0 focus-visible:ring-offset-0"
                           value={field.value}
-                          onBlur={form.handleSubmit(updateTodo)}
+                          onBlur={form.handleSubmit(handleUpdateTodo)}
                           placeholder="You can still add a description here"
                           autoComplete="off"
                           disabled={todoCompleted}

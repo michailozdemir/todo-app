@@ -5,22 +5,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Form, FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "./textarea";
 import { Loader2 } from "lucide-react";
-import { useTodos } from "../todos-provider";
+import { useCreateTodo } from "@/lib/react-query/useTodos";
 
 const formSchema = z.object({
   title: z.string().min(1, {
     message: "Title is required",
   }),
-  description: z.string().optional(),
+  description: z.string().optional().default(""),
   completed: z.boolean(),
 });
 
 const AddTodoForm = () => {
-  const { addTodo } = useTodos();
+  const { mutateAsync: createTodo } = useCreateTodo();
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -35,7 +34,11 @@ const AddTodoForm = () => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsSubmitted(true);
 
-    await addTodo(data);
+    await createTodo({
+      title: data.title,
+      description: data.description || "",
+      completed: data.completed,
+    });
 
     setIsSubmitted(false);
     form.reset();

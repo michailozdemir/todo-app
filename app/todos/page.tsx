@@ -1,19 +1,17 @@
-"use client";
-
 import React from "react";
 import AddTodoForm from "@/components/ui/add-todo-form";
 import TodosList from "@/components/ui/todos-list";
-import { TodosProvider } from "@/components/todos-provider";
+import Container from "@/components/ui/container";
 
 const Page = () => {
   return (
-    <section className="py-16 sm:py-32 max-w-3xl w-full">
-      <div className="px-4 grid gap-10 sm:gap-4">
-        <TodosProvider>
+    <section className="py-16 sm:py-32">
+      <Container>
+        <div className="max-w-[800px] mx-auto px-4 grid gap-10 sm:gap-4">
           <AddTodoForm />
           <TodosList />
-        </TodosProvider>
-      </div>
+        </div>
+      </Container>
     </section>
   );
 };

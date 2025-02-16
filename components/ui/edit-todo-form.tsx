@@ -8,10 +8,11 @@ import { Form, FormField, FormItem, FormControl, FormMessage } from "./form";
 import { Input } from "./input";
 import clsx from "clsx";
 import { Checkbox } from "./checkbox";
-import { Todos } from "@prisma/client";
+import { Todo } from "@prisma/client";
+import { useUpdateTodo } from "@/lib/react-query/useTodos";
 
 type EditTodoFormProps = {
-  todo: Todos;
+  todo: Todo;
 };
 
 const formSchema = z.object({
@@ -22,6 +23,7 @@ const formSchema = z.object({
 
 const EditTodoForm = ({ todo }: EditTodoFormProps) => {
   const { id, title, description, completed } = todo;
+  const { mutateAsync: updateTodo } = useUpdateTodo();
   const [todoCompleted, setTodoCompleted] = useState(completed);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -33,20 +35,12 @@ const EditTodoForm = ({ todo }: EditTodoFormProps) => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    try {
-      fetch(`/api/todos/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      setTodoCompleted(data.completed);
-    } catch (error) {
-      console.error(error);
-    }
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    await updateTodo({
+      id,
+      data,
+    });
+    setTodoCompleted(data.completed);
   };
 
   return (

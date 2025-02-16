@@ -1,20 +1,22 @@
+"use client";
+
 import React from "react";
 import TodoItem from "./todo-item";
-import { Todos } from "@prisma/client";
-import { useTodos } from "../todos-provider";
+import { Todo } from "@prisma/client";
 import { Loader2 } from "lucide-react";
+import { useTodos } from "@/lib/react-query/useTodos";
 
 const TodosList = () => {
-  const { todos } = useTodos();
+  const { data: todos, isLoading, isError } = useTodos();
 
-  if (!todos)
+  if (isLoading)
     return (
       <div className="mt-5 text-center mx-auto">
         <Loader2 className="w-10 h-10 animate-spin" />
       </div>
     );
 
-  if (!todos?.length)
+  if (todos?.length === 0)
     return (
       <div className="mt-5 text-center py-16 px-5 max-w-3xl mx-auto w-full bg-black bg-opacity-5 rounded-xl dark:bg-white dark:bg-opacity-5">
         <p className="text-3xl font-semibold">No todos yet :(</p>
@@ -24,7 +26,7 @@ const TodosList = () => {
 
   return (
     <div className="grid place-items-center gap-2 max-w-3xl mx-auto w-full">
-      {todos?.map((todo: Todos) => (
+      {todos?.map((todo: Todo) => (
         <TodoItem key={todo.id} todo={todo} />
       ))}
     </div>

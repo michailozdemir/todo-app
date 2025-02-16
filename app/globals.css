@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin 'tailwindcss-animate';
 
@@ -36,17 +36,11 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
+  /* --background-image-hero-bg: url("/images/todos-bg.svg");
+  --background-image-hero-bg-dark: url("/images/todos-bg-dark.svg"); */
+
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
-
-  --background-image-hero-bg: url('/images/todos-bg.svg');
-  --background-image-hero-bg-dark: url('/images/todos-bg-dark.svg');
-
-  --background-size-600: 600px;
-  --background-size-1100: 1100px;
-  --background-size-auto: auto;
-  --background-size-cover: cover;
-  --background-size-contain: contain;
 
   @keyframes accordion-down {
     from {
@@ -105,7 +99,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 95.7%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;

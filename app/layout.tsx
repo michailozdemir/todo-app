@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
+import { DM_Sans } from "next/font/google";
+import QueryProvider from "@/components/query-provider";
+const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"] });
 
 export const metadata: Metadata = {
   title: "Todo.easy - your daily todos",
@@ -13,14 +15,16 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={GeistSans.className}>
-        <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
-          <main className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex justify-center flex-1">{children}</main>
-            <Footer />
-          </main>
-        </ThemeProvider>
+      <body className={dmSans.className}>
+        <QueryProvider>
+          <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
+            <main className="min-h-screen flex flex-col">
+              <Header />
+              {children}
+              <Footer />
+            </main>
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );
